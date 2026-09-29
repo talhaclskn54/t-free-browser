@@ -19,13 +19,19 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Install Gradle
+    - name: Install Android SDK & Gradle
       run: |
         sudo apt-get update
         sudo apt-get install -y gradle
 
-    - name: Build APK with System Gradle
-      run: gradle assembleDebug
+    - name: Find and Build APK
+      run: |
+        # gradlew dosyasını arayalım, yoksa oluşturalım
+        if [ ! -f "gradlew" ]; then
+          gradle wrapper
+        fi
+        chmod +x gradlew
+        ./gradlew assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
